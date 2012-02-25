@@ -21,7 +21,7 @@
 (mac deftag (name (attrs children) . body)
   `(def ,symtag.name args
      (let (,attrs ,children) parse-attrs-nodes.args
-       (list ,@body))))
+       (do ,@body))))
 
 (mac gentag (name . body)
   (unless (bound:symtag name)
