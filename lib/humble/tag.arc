@@ -15,11 +15,11 @@
               c))))
 
 (def pr-tag-attrs (attrs)
-  (each (k v) attrs
+  (each k (sort < keys.attrs)
     (pr " ")
     (pr-escaped:string k)
     (pr "=\"")
-    (pr-escaped v)
+    (pr-escaped:attrs k)
     (pr "\"")))
 
 (def pr-tag-open (name attrs (o close))

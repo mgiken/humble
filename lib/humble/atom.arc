@@ -2,10 +2,10 @@
 
 (require "humble/tag.arc")
 
-(gentag feed
-  (= attrs!xmlns "http://www.w3.org/2005/Atom"))
+(deftag feed
+  (or= attrs!xmlns "http://www.w3.org/2005/Atom"))
 
-(gentags
+(deftags
   author
   category content contributor
   entry

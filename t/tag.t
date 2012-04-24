@@ -30,10 +30,10 @@
       " foo=\"foo\"")
 (test is
       (tostring:pr-tag-attrs (obj foo "foo" bar "bar"))
-      " foo=\"foo\" bar=\"bar\"")
+      " bar=\"bar\" foo=\"foo\"")
 (test is
       (tostring:pr-tag-attrs (obj foo "f&oo" bar "b<ar"))
-      " foo=\"f&amp;oo\" bar=\"b&lt;ar\"")
+      " bar=\"b&lt;ar\" foo=\"f&amp;oo\"")
 
 ; pr-tag-open ----------------------------------------------------------------
 
