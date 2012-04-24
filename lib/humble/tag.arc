@@ -61,10 +61,11 @@
         (list attrs xs))))
 
 (mac deftag (name . body)
-  `(def ,symtag.name args
-     (let (attrs nodes) (parse-attrs-nodes args)
-       ,@body
-       (raw (tostring:pr-tag ',name attrs nodes)))))
+  (unless (bound:symtag name)
+    `(def ,symtag.name args
+       (let (attrs nodes) (parse-attrs-nodes args)
+         ,@body
+         (raw (tostring:pr-tag ',name attrs nodes))))))
 
 (mac deftags args
   (each x args
