@@ -4,43 +4,6 @@
 
 (implicit markup 'html)  ; Available markup [html|xml]
 
-(mac symtag (x)
-  `(sym:+ #\< ,x))
-
-(mac raw (x)
-  `(fn () ,x))
-
-(def parse-attrs-nodes (xs)
-  (if (carisa xs 'table)
-      (list car.xs cdr.xs)
-      (let attrs (table)
-        (while (carisa xs 'sym)
-          (= (attrs pop.xs) pop.xs))
-        (list attrs xs))))
-
-(mac deftag (name (attrs children) . body)
-  `(def ,symtag.name args
-     (let (,attrs ,children) parse-attrs-nodes.args
-       (do ,@body))))
-
-(mac gentag (name . body)
-  (unless (bound:symtag name)
-    `(deftag ,name (attrs children)
-       (do ,@body
-           (raw (tostring:pr-tag ',name attrs children))))))
-
-(mac gentags args
-  (each x args
-    (eval `(gentag ,x))))
-
-(mac extag (name . body)
-  (w/uniq gargs
-    `(let orig ,symtag.name
-       (= ,symtag.name (fn ,gargs
-                         (let (attrs children) (parse-attrs-nodes ,gargs)
-                           ,@body
-                           (orig attrs children)))))))
-
 (def pr-escaped (x)
   (each c x
     (pr (case c
@@ -69,15 +32,49 @@
 (def pr-tag-close (name)
   (pr "</" name ">"))
 
-(def pr-tag (name attrs children)
-  (if children
+(def pr-tag (name attrs . nodes)
+  (if car.nodes
       (do (pr-tag-open name attrs)
-          (each c children pr-node.c)
+          (each n nodes pr-node.n)
           (pr-tag-close name))
       (pr-tag-open name attrs t)))
 
-(def pr-node (node)
-  (if (no node)      nil
-      (acons node)   (each n node (pr-node n))
-      (isa node 'fn) (pr:node)
-                     (pr-escaped node)))
+(def pr-node args
+  (each node args
+    (if (no node)      nil
+        (acons node)   (each n node (pr-node n))
+        (isa node 'fn) (pr:node)
+                       (pr-escaped node))))
+
+(mac symtag (x)
+  `(sym:+ #\< ,x))
+
+(mac raw (x)
+  `(fn () ,x))
+
+(def parse-attrs-nodes (xs)
+  (if (carisa xs 'table)
+      (list car.xs cdr.xs)
+      (let attrs (table)
+        (while (carisa xs 'sym)
+          (= (attrs pop.xs) pop.xs))
+        (list attrs xs))))
+
+(mac deftag (name . body)
+  `(def ,symtag.name args
+     (let (attrs nodes) (parse-attrs-nodes args)
+       ,@body
+       (raw (tostring:pr-tag ',name attrs nodes)))))
+
+(mac deftags args
+  (each x args
+    (eval `(deftag ,x))))
+
+(mac extag (name . body)
+  (w/uniq gargs
+    `(let orig ,symtag.name
+       (= ,symtag.name
+          (fn ,gargs
+            (let (attrs nodes) (parse-attrs-nodes ,gargs)
+              ,@body
+              (apply orig attrs nodes)))))))
