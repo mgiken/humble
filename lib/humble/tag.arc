@@ -60,16 +60,16 @@
           (= (attrs pop.xs) pop.xs))
         (list attrs xs))))
 
-(mac deftag (name . body)
+(mac gentag (name . body)
   (unless (bound:symtag name)
     `(def ,symtag.name args
        (let (attrs nodes) (parse-attrs-nodes args)
          ,@body
          (raw (tostring:pr-tag ',name attrs nodes))))))
 
-(mac deftags args
+(mac gentags args
   (each x args
-    (eval `(deftag ,x))))
+    (eval `(gentag ,x))))
 
 (mac extag (name . body)
   (w/uniq gargs

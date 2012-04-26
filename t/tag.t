@@ -98,9 +98,9 @@
 (test iso (parse-attrs-nodes (list "foo" "bar"))
           (list (table) (list "foo" "bar")))
 
-; deftag ---------------------------------------------------------------------
+; gentag ---------------------------------------------------------------------
 
-(deftag foo)
+(gentag foo)
 (test isa (<foo) 'fn)
 (test is ((<foo)) "<foo>")
 (test is ((<foo nil)) "<foo>")
@@ -110,9 +110,9 @@
 (test is ((<foo 'bar "&bar" "<baz")) "<foo bar=\"&amp;bar\">&lt;baz</foo>")
 (test is ((<foo 'bar "&bar" (raw "<baz"))) "<foo bar=\"&amp;bar\"><baz</foo>")
 
-; deftags --------------------------------------------------------------------
+; gentags --------------------------------------------------------------------
 
-(deftags x y z)
+(gentags x y z)
 (test isa (<x) 'fn)
 (test isa (<y) 'fn)
 (test isa (<z) 'fn)

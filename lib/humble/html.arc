@@ -3,7 +3,7 @@
 (require "humble/tag.arc")
 
 ; http://www.w3schools.com/html5/html5_reference.asp
-(deftags
+(gentags
   a abbr address area article aside audio
   b base bdi bdo blockquote body br button
   canvas caption cite code col colgroup command
